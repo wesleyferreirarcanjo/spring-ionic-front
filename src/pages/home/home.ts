@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { IonicPage, MenuController, NavController } from 'ionic-angular';
 
 import { Storage } from '@ionic/storage';
 
@@ -11,22 +11,36 @@ import { Storage } from '@ionic/storage';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, private storage: Storage) {
-    this.checkIfIsFirstTime(storage, navCtrl);
+  constructor(public navCtrl: NavController, private storage: Storage, public menu: MenuController) {
+    this.checkIfIsFirstTime();
 
   }
 
-  checkIfIsFirstTime(storage: Storage, navCtrl: NavController) {
+  ionViewDidEnter(){
+    this.menu.swipeEnable(false);
+  }
 
-    storage.get('first_time').then((val) => {
+  ionViewDidLeave(){
+    this.menu.swipeEnable(true);
+  }
+
+
+  login() {
+    this.navCtrl.setRoot('CategoriasPage')
+  }
+
+  checkIfIsFirstTime() {
+
+    this.storage.get('first_time').then((val) => {
 
       if (val == null) {
-        storage.set('first_time', 'true');
-        navCtrl.push('FirstAccessPage');
+        this.storage.set('first_time', 'true');
+        this.navCtrl.push('FirstAccessPage');
       }
       
     });
     
   }
+
 
 }
