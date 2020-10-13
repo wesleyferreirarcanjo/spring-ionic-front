@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, MenuController, NavController } from 'ionic-angular';
 
-import { Storage } from '@ionic/storage';
 import { CredenciaisDTO } from '../../models/credenciais.dto';
 import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
 
 
 @IonicPage()
@@ -19,13 +19,14 @@ export class HomePage {
     senha: ""
   };
 
-  constructor(public navCtrl: NavController, private storage: Storage, public menu: MenuController, public auth: AuthService) {
-    this.checkIfIsFirstTime();
-
+  constructor(public navCtrl: NavController, private storage: StorageService, public menu: MenuController, public auth: AuthService) {
+    this.checkIfFirstTime();
   }
 
   ionViewDidEnter(){
     this.menu.swipeEnable(false);
+
+
   }
 
   ionViewDidLeave(){
@@ -36,7 +37,7 @@ export class HomePage {
   login() {
     this.auth.authenticate(this.creds)
       .subscribe(response => {
-        console.log(response.headers.get('Authorization'));
+        this.auth.successfulLogin(response.headers.get('Authorization'));
         this.navCtrl.setRoot('CategoriasPage');
       },
       error => {}
@@ -44,18 +45,17 @@ export class HomePage {
 
   }
 
-  checkIfIsFirstTime() {
-
-    this.storage.get('first_time').then((val) => {
+  checkIfFirstTime() {
+    this.storage.checkIfIsFirstTime().then((val) => {
 
       if (val == null) {
-        this.storage.set('first_time', 'true');
-        this.navCtrl.push('FirstAccessPage');
-      }
-      
+        this.storage.saveFirstTime();
+        this.navCtrl.push("FirstAccessPage");
+      } 
     });
-    
+  }
+
   }
 
 
-}
+
