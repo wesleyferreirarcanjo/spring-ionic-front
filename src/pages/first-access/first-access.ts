@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
+import { IonicPage, MenuController, NavController, NavParams, Slides } from 'ionic-angular';
 
 /**
  * Generated class for the FirstAccessPage page.
@@ -31,6 +31,6 @@ export class FirstAccessPage {
   }
 
   goHome() {
-    this.navCtrl.pop();
+    this.navCtrl.setRoot('HomePage');
   }
 }
