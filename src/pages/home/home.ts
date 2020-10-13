@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
+
+import { Storage } from '@ionic/storage';
+
 
 @IonicPage()
 @Component({
@@ -8,8 +11,22 @@ import { IonicPage, NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, private storage: Storage) {
+    this.checkIfIsFirstTime(storage, navCtrl);
 
+  }
+
+  checkIfIsFirstTime(storage: Storage, navCtrl: NavController) {
+
+    storage.get('first_time').then((val) => {
+
+      if (val == null) {
+        storage.set('first_time', 'true');
+        navCtrl.push('FirstAccessPage');
+      }
+      
+    });
+    
   }
 
 }
