@@ -14,5 +14,14 @@
 </ion-header>
 
 <ion-content padding>
-  <h1>Pagina de categorias</h1>
+  <ion-list>
+
+    <button ion-item *ngFor="let item of items">
+      <ion-thumbnail item-start>
+        <img src='{{bucketUrl + item.id + ".jpg"}}' />
+      </ion-thumbnail>
+      <h2>{{item.nome}}</h2>
+    </button>
+
+  </ion-list>
 </ion-content>
