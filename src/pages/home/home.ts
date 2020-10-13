@@ -3,6 +3,7 @@ import { IonicPage, MenuController, NavController } from 'ionic-angular';
 
 import { Storage } from '@ionic/storage';
 import { CredenciaisDTO } from '../../models/credenciais.dto';
+import { AuthService } from '../../services/auth.service';
 
 
 @IonicPage()
@@ -18,7 +19,7 @@ export class HomePage {
     senha: ""
   };
 
-  constructor(public navCtrl: NavController, private storage: Storage, public menu: MenuController) {
+  constructor(public navCtrl: NavController, private storage: Storage, public menu: MenuController, public auth: AuthService) {
     this.checkIfIsFirstTime();
 
   }
@@ -33,8 +34,14 @@ export class HomePage {
 
 
   login() {
-    console.log(this.creds);
-    this.navCtrl.setRoot('CategoriasPage')
+    this.auth.authenticate(this.creds)
+      .subscribe(response => {
+        console.log(response.headers.get('Authorization'));
+        this.navCtrl.setRoot('CategoriasPage');
+      },
+      error => {}
+      );
+
   }
 
   checkIfIsFirstTime() {
