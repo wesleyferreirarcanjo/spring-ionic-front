@@ -24,12 +24,15 @@ export class HomePage {
   }
 
   ionViewDidEnter(){
-    this.auth.refreshToken().subscribe(response => {
-      this.auth.successfulLogin(response.headers.get('Authorization'));
-      this.navCtrl.setRoot('CategoriasPage');
-    },
-    error => {}
-    );
+    if(this.storage.getLocalUser()) {
+      this.auth.refreshToken().subscribe(response => {
+        this.auth.successfulLogin(response.headers.get('Authorization'));
+        this.navCtrl.setRoot('CategoriasPage');
+      },
+      error => {}
+      );
+    }
+
   }
 
   ionViewWillEnter(){
