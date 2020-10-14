@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonicPage, MenuController, NavController, NavParams } from 'ionic-angular';
+import { AlertController, IonicPage, MenuController, NavController, NavParams } from 'ionic-angular';
 import { CidadeDTO } from '../../models/cidade.dto';
 import { EstadoDTO } from '../../models/estado.dto';
 import { CidadeService } from '../../services/domain/cidade.service';
+import { ClienteService } from '../../services/domain/cliente.service';
 import { EstadoService } from '../../services/domain/estado.service';
 
 
@@ -19,11 +20,11 @@ export class SingupPage {
   cidades: CidadeDTO[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public menu: MenuController, public formBuilder: FormBuilder,
-      public cidadeService : CidadeService, public estadoService : EstadoService) {
+      public cidadeService : CidadeService, public estadoService : EstadoService, public clienteService: ClienteService, public alertCtrl: AlertController) {
     this.formGroup = formBuilder.group({
       nome: ['Joaquim', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
       email: ['joaquim@gmail.com', [Validators.required, Validators.email]],
-      tipo : ['1', [Validators.required]],
+      tipoCliente : ['1', [Validators.required]],
       cpfOuCnpj : ['06134596280', [Validators.required, Validators.minLength(11), Validators.maxLength(14)]],
       senha : ['123', [Validators.required]],
       logradouro : ['Rua Via', [Validators.required]],
@@ -31,7 +32,7 @@ export class SingupPage {
       complemento : ['Apto 3', []],
       bairro : ['Copacabana', []],
       cep : ['10828333', [Validators.required]],
-      telefone1 : ['977261827', [Validators.required]],
+      telefone : ['977261827', [Validators.required]],
       telefone2 : ['', []],
       telefone3 : ['', []],
       estadoId : [null, [Validators.required]],
@@ -49,12 +50,13 @@ export class SingupPage {
   }
 
   updateCidades() {
-    const estadoId = this.formGroup.value.estadoId;
-    this.cidadeService.findAll(estadoId)
+    const estado_id = this.formGroup.value.estadoId;
+    this.cidadeService.findAll(estado_id)
       .subscribe(response => {
         this.cidades = response;
-        this.formGroup.controls.cidadeId.setValue(this.cidades[0].id);
-      }, error => {});
+        this.formGroup.controls.cidadeId.setValue(null);
+      },
+      error => {});
   }
   
 
@@ -67,7 +69,25 @@ export class SingupPage {
   }
 
   signupUser() {
-    console.log("form enviado");
+    this.clienteService.insert(this.formGroup.value)
+    .subscribe(response => {
+      this.showInsertOk();
+    }, error => {});
+  }
+
+  showInsertOk() {
+    const alert = this.alertCtrl.create({
+      title: 'Sucesso!',
+      message: 'Cadastro efetuado com sucesso',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'ok',
+          handler: () => { this.navCtrl.pop(); }
+        }
+      ]
+    });
+    alert.present();
   }
 
 }

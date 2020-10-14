@@ -2,6 +2,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HTTP_INTERCEPTORS
 import { Injectable } from "@angular/core";
 import { AlertController } from "ionic-angular";
 import { Observable } from "rxjs/Rx";
+import { FieldMessage } from "../models/fieldmessage";
 import { StorageService } from "../services/storage.service";
 
 
@@ -34,6 +35,9 @@ export class ErrorInterceptor implements HttpInterceptor {
                 case 403:
                     this.handle403();
                     break;
+                case 422:
+                    this.handle422(errorObj);
+                    break;
                 default:
                     this.handleDafultError(errorObj);
             }
@@ -43,6 +47,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         }) as any;
     }
 
+
     handle403 () {
         this.storage.setLocalUser(null);
     }
@@ -51,6 +56,20 @@ export class ErrorInterceptor implements HttpInterceptor {
         const alert = this.alertCrtl.create({
             title: "Erro 401: Falha de autenticacao",
             message: "Email ou senha incorretos",
+            enableBackdropDismiss: false,
+            buttons: [
+                {
+                    text: "Ok"
+                }
+            ]
+        });
+        alert.present();
+    }
+
+    handle422(errorObj: any) {
+        const alert = this.alertCrtl.create({
+            title: 'Error 422: Erro de entidade',
+            message: this.listErrors(errorObj.errors),
             enableBackdropDismiss: false,
             buttons: [
                 {
@@ -74,6 +93,15 @@ export class ErrorInterceptor implements HttpInterceptor {
         });
         alert.present();
     }
+
+    listErrors(errors: FieldMessage[]): string {
+        let s : string = '';
+        for (let i = 0; i < errors.length; i++) {
+            s = `${s}<p><strong>${errors[i].fieldName}</strong>: ${errors[i].message}</p>`;
+        }
+        return s;
+    }
+
     
 }
 
