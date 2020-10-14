@@ -52,6 +52,10 @@ export class HomePage {
 
   }
 
+  singup() {
+    this.navCtrl.push('SingupPage');
+  }
+
   checkIfFirstTime() {
     this.storage.checkIfIsFirstTime().then((val) => {
 

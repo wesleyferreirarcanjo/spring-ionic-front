@@ -18,7 +18,7 @@ export class FirstAccessPage {
   
   @ViewChild(Slides) slides: Slides
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public menu : MenuController) {
   }
 
   goToSlide() {
@@ -32,5 +32,13 @@ export class FirstAccessPage {
 
   goHome() {
     this.navCtrl.setRoot('HomePage');
+  }
+
+  ionViewWillEnter(){
+    this.menu.enable(false);
+  }
+
+  ionViewDidLeave(){
+    this.menu.enable(true);
   }
 }
