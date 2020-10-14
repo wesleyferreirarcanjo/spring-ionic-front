@@ -21,13 +21,20 @@ export class ProfilePage {
 
   ionViewDidLoad() {
     let localUser = this.storage.getLocalUser();
+
     if(localUser && localUser.email) {
       this.clienteService.findByEmail(localUser.email)
         .subscribe(response => {
           this.cliente = response;
           this.getImageIfExist();
         }, 
-        error => {});
+        error => {
+          if(error.status == 403){
+            this.navCtrl.setRoot('HomePage');
+          }
+        });
+    }else {
+      this.navCtrl.setRoot('HomePage');
     }
   }
 
