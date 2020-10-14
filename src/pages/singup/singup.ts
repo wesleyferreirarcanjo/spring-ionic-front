@@ -53,7 +53,7 @@ export class SingupPage {
     this.cidadeService.findAll(estadoId)
       .subscribe(response => {
         this.cidades = response;
-        this.formGroup.controls.cidadeId.setValue(null);
+        this.formGroup.controls.cidadeId.setValue(this.cidades[0].id);
       }, error => {});
   }
   
