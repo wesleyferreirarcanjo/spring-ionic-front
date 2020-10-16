@@ -7,6 +7,7 @@ import { ProdutoDTO } from "../../models/produto.dto";
 @Injectable()
 export class ProdutoService {
 
+
     constructor(public http: HttpClient) {
 
     }
@@ -19,5 +20,12 @@ export class ProdutoService {
         let url = `${API_CONFIG.bucketBaseUrl}prod${id}-small.jpg`;
         return this.http.get(url, {responseType : 'blob'});
     }
+
+    getImageFromBucket(id: string) {
+        let url = `${API_CONFIG.bucketBaseUrl}prod${id}.jpg`;
+        return this.http.get(url, {responseType : 'blob'});
+    }
+
+
 
 }

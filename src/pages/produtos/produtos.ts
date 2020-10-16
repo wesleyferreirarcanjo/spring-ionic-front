@@ -40,9 +40,9 @@ export class ProdutosPage {
       
     }
 
-
-
-
-
+    
+    showProduto(item: ProdutoDTO) {
+    this.navCtrl.push('ProdutoDetailPage', {id: item.id, nome: item.nome, preco: item.preco});
+  }
 
 }
