@@ -41,8 +41,8 @@ export class ProdutosPage {
     }
 
     
-    showProduto(item: ProdutoDTO) {
-    this.navCtrl.push('ProdutoDetailPage', {id: item.id, nome: item.nome, preco: item.preco});
+    showProduto(id: string) {
+    this.navCtrl.push('ProdutoDetailPage', {id: id});
   }
 
 }

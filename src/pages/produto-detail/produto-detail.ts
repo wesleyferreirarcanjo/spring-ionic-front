@@ -17,8 +17,11 @@ export class ProdutoDetailPage {
   }
 
   ionViewDidLoad() {
-    this.item = {id: this.navParams.get('id'), nome: this.navParams.get('nome'), preco: this.navParams.get('preco')};
-    this.getImageIfExist();
+    this.produtoService.findById(this.navParams.get("id"))
+      .subscribe(response => {
+        this.item = response;
+        this.getImageIfExist();
+      }, error => {});
   }
 
   getImageIfExist(){
