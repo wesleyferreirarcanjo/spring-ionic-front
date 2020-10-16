@@ -33,4 +33,6 @@ export class CategoriasPage {
     this.navCtrl.push('ProdutosPage', {id: id});
   }
 
+  
+
 }

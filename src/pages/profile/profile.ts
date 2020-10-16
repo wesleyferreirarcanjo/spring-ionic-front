@@ -46,4 +46,6 @@ export class ProfilePage {
     },
     error => {})
   }
+
+  
 }

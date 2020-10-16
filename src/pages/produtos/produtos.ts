@@ -45,4 +45,6 @@ export class ProdutosPage {
     this.navCtrl.push('ProdutoDetailPage', {id: id});
   }
 
+  
+
 }

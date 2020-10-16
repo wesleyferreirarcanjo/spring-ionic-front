@@ -37,6 +37,8 @@ export class ProdutoDetailPage {
       this.cartService.addProduto(item);
       this.navCtrl.setRoot('CartPage');
     }
+
+    
       
 
 }
