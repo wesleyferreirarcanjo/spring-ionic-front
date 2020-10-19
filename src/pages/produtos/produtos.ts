@@ -12,7 +12,9 @@ import { ProdutoService } from '../../services/domain/produto.service';
 })
 export class ProdutosPage {
 
-  items: ProdutoDTO[];
+  items: ProdutoDTO[] = [];
+
+  page: number = 0;
 
   bucketUrl = API_CONFIG.bucketBaseUrl + "prod"; 
 
@@ -25,26 +27,30 @@ export class ProdutosPage {
 
   loadData() {
     const loader = this.presentLoading();
-    this.produtoService.findByCategoria(this.navParams.get("id"))
+    this.produtoService.findByCategoria(this.navParams.get("id"), this.page, 10)
       .subscribe(response => {
-        this.items = response['content'];
-        this.getImageIfExist();
+        let start = this.items.length;
+        this.items = this.items.concat(response['content']);
+        let end = this.items.length - 1;
+        this.getImageIfExist(start, end);
         loader.dismiss();
+        console.log(this.items);
       }, error => {
         loader.dismiss();
       });
   }
 
-  getImageIfExist() {
+  getImageIfExist(start: number, end: number) {
 
-    for (let i = 0; i < this.items.length; i++) {
+    for (let i = start; i < end; i++) {
       let item = this.items[i];
       this.produtoService.getSmallImageFromBucket(item.id)
       .subscribe(reponse => {
         item.imageUrl = `${API_CONFIG.bucketBaseUrl}prod${item.id}-small.jpg`;
       },
       error => {})
-    }   
+    } 
+
   }
 
     
@@ -62,12 +68,22 @@ export class ProdutosPage {
     }
 
   doRefresh(refresher) {
-
-
+    this.items = [];
+    this.page = 0;
     setTimeout(() => {
       this.loadData();
-      
+
       refresher.complete();
+    }, 1000);
+  }
+
+  doInfinite(scroll) {
+    this.page++;
+    this.loadData();
+    setTimeout(() => {
+      
+
+      scroll.complete();
     }, 1000);
   }
 
