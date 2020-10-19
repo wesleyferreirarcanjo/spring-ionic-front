@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
 import { API_CONFIG } from '../../config/api.config';
 import { ProdutoDTO } from '../../models/produto.dto';
 import { ProdutoService } from '../../services/domain/produto.service';
@@ -16,15 +16,23 @@ export class ProdutosPage {
 
   bucketUrl = API_CONFIG.bucketBaseUrl + "prod"; 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public produtoService: ProdutoService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public produtoService: ProdutoService,public loadingCrtl: LoadingController) {
   }
 
   ionViewDidLoad() {
+    this.loadData();
+  }
+
+  loadData() {
+    const loader = this.presentLoading();
     this.produtoService.findByCategoria(this.navParams.get("id"))
       .subscribe(response => {
         this.items = response['content'];
         this.getImageIfExist();
-      }, error => {});
+        loader.dismiss();
+      }, error => {
+        loader.dismiss();
+      });
   }
 
   getImageIfExist() {
@@ -36,15 +44,31 @@ export class ProdutosPage {
         item.imageUrl = `${API_CONFIG.bucketBaseUrl}prod${item.id}-small.jpg`;
       },
       error => {})
-    }
-      
-    }
+    }   
+  }
 
     
     showProduto(id: string) {
     this.navCtrl.push('ProdutoDetailPage', {id: id});
   }
 
-  
+    presentLoading() {
+      const loadder = this.loadingCrtl.create({
+        content: "Aguarde....!"
+      });
+
+      loadder.present();
+      return loadder;
+    }
+
+  doRefresh(refresher) {
+
+
+    setTimeout(() => {
+      this.loadData();
+      
+      refresher.complete();
+    }, 1000);
+  }
 
 }
