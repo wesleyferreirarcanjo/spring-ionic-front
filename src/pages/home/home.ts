@@ -20,7 +20,7 @@ export class HomePage {
   };
 
   constructor(public navCtrl: NavController, private storage: StorageService, public menu: MenuController, public auth: AuthService) {
-    this.checkIfFirstTime();
+
   }
 
   ionViewDidEnter(){
@@ -58,7 +58,7 @@ export class HomePage {
   singup() {
     this.navCtrl.push('SingupPage');
   }
-
+/*
   checkIfFirstTime() {
     this.storage.checkIfIsFirstTime().then((val) => {
 
@@ -68,7 +68,7 @@ export class HomePage {
       } 
     });
   }
-
+*/
   }
 
 
